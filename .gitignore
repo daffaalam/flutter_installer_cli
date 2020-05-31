@@ -10,3 +10,4 @@ doc/api/
 
 # Custom
 *.exe
+*.log
