@@ -37,6 +37,8 @@
 - [high] Create and send log for analyzing error
 - [low] Check for exists Android Studio
 
+### Other
+
 Batch file (.bat) version [here](https://github.com/daffaalam/flutter-installer).
 
 ***
