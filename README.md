@@ -1,21 +1,11 @@
 # Flutter Installer
 
+### Download [here](https://github.com/daffaalam/flutter_installer_dart/releases/download/v0.2.0/flutter_installer_cli.exe)
+
 ### Screenshots
 
-<img src="screenshots/screenshot-0.png" width="512">
-<img src="screenshots/screenshot-1.png" width="512">
-<img src="screenshots/screenshot-2.png" width="512">
-<img src="screenshots/screenshot-3.png" width="512">
-
-***
-
-![screenshots](screenshots/screenshot-0.png)
-
-![screenshots](screenshots/screenshot-1.png)
-
-![screenshots](screenshots/screenshot-2.png)
-
-![screenshots](screenshots/screenshot-3.png)
+<img src="screenshots/screenshot-0.png" width="512"><img src="screenshots/screenshot-1.png" width="512">
+<img src="screenshots/screenshot-2.png" width="512"><img src="screenshots/screenshot-3.png" width="512">
 
 ### Features
 
