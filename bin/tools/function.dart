@@ -14,6 +14,42 @@ bool isDebug = false;
 String installationPath = '';
 Map<String, String> environment = <String, String>{};
 
+Future<bool> checkPowerShell() async {
+  try {
+    var result = await run(
+      'powershell \$Host.Version.Major',
+      [],
+      verbose: isDebug,
+      stdin: s.sharedStdIn,
+    );
+    var version = '${result.stdout ?? result.stderr}';
+    return (int.tryParse(version) ?? 0) >= 5;
+  } catch (e) {
+    return false;
+  }
+}
+
+Future<void> withOutAndroidStudio({
+  @required String javaPath,
+  @required String androidPath,
+  @required String operatingSystem,
+}) async {
+  if (javaPath == null) {
+    await installJava(
+      operatingSystem: operatingSystem,
+    );
+  }
+  if (androidPath == null) {
+    await installAndroid(
+      operatingSystem: operatingSystem,
+    );
+  } else {
+    await updateAndroid(
+      toolsPath: Directory(androidPath).parent.path,
+    );
+  }
+}
+
 Future<FlutterReleases> getFlutterLatestInfo({
   @required String operatingSystem,
 }) async {
@@ -54,10 +90,11 @@ Future<JavaReleases> getJavaLatestInfo({
 
 Future<Response> downloadFile({
   String title = 'unknown',
+  String content = '',
   @required String urlPath,
   @required String savePath,
 }) async {
-  stdout.writeln('[$title] Downloading...');
+  stdout.writeln('[$title] Downloading $content [START]');
   try {
     var _response = await Dio().download(
       '$urlPath',
@@ -65,7 +102,9 @@ Future<Response> downloadFile({
       onReceiveProgress: (int count, int total) {
         var percent = 100 ~/ (total / count);
         stdout.write('\r' '[$title] Receive $count Of $total ($percent%)');
-        if (count == total) stdout.write('\n[$title] Download Finish\n');
+        if (count == total) {
+          stdout.write('\n[$title] Download $content [FINISH]\n');
+        }
       },
     );
     return _response;
@@ -77,10 +116,11 @@ Future<Response> downloadFile({
 
 Future<void> extractZip({
   String title = 'unknown',
+  String content = '',
   @required String filePath,
   @required String savePath,
 }) async {
-  stdout.writeln('[$title] Extracting...');
+  stdout.writeln('[$title] Extracting $content [START]');
   try {
     var archive = ZipDecoder().decodeBytes(
       File(filePath).readAsBytesSync(),
@@ -99,9 +139,28 @@ Future<void> extractZip({
         await dir.create(recursive: true);
       }
     }
-    stdout.write('\n[$title] Extract Finish\n');
+    stdout.write('\n[$title] Extract $content [FINISH]\n');
   } catch (e) {
     await errorLog(e);
+  }
+}
+
+Future<bool> checkAndroidStudio() async {
+  try {
+    var studioPath = '';
+    var setDir = await Directory('$userHomePath').list().toSet();
+    for (var dir in setDir) {
+      if (dir.path.contains('.AndroidStudio')) studioPath = dir.path;
+    }
+    var studio = await Directory(studioPath).exists();
+    var version = studioPath.replaceAll('$userHomePath\\.AndroidStudio', '');
+    var home = await File('$studioPath\\system\\.home').readAsString();
+    stdout.writeln(
+      '[STUDIO] Android Studio $version already installed on $home',
+    );
+    return studio;
+  } catch (e) {
+    return false;
   }
 }
 
@@ -121,12 +180,14 @@ Future<void> installFlutter({
       if (!exists) {
         await downloadFile(
           title: 'FLUTTER',
+          content: 'Flutter ${releases.version}',
           urlPath: '${flutterReleases.baseUrl}/${releases.archive}',
           savePath: flutterZipPath,
         );
       }
       await extractZip(
         title: 'FLUTTER',
+        content: 'flutter ${releases.version}',
         filePath: flutterZipPath,
         savePath: '${installationPath}\\',
       );
@@ -155,12 +216,14 @@ Future<void> installJava({
   if (!exists) {
     await downloadFile(
       title: 'JAVA',
+      content: 'Java ${binary.versionData.semver}',
       urlPath: binary.binaryLink,
       savePath: javaZipPath,
     );
   }
   await extractZip(
     title: 'JAVA',
+    content: 'Java ${binary.versionData.semver}',
     filePath: javaZipPath,
     savePath: '${installationPath}\\',
   );
@@ -187,12 +250,14 @@ Future<void> installAndroid({
   if (!exists) {
     await downloadFile(
       title: 'ANDROID',
+      content: 'Android Tools 26.1.1',
       urlPath: 'https://dl.google.com/android/repository/$androidZipName',
       savePath: androidZipPath,
     );
   }
   await extractZip(
     title: 'ANDROID',
+    content: 'Android Tools 26.1.1',
     filePath: androidZipPath,
     savePath: '$installationPath\\',
   );
@@ -222,45 +287,66 @@ Future<void> installAndroid({
 Future<void> updateAndroid({
   @required String toolsPath,
 }) async {
-  stdout.writeln('[ANDROID] Updating...');
+  stdout.writeln('[ANDROID] Installing and Updating [START]');
   var repoConfig = '$userHomePath\\.android\\repositories.cfg';
   var exists = await File(repoConfig).exists();
-  if (!exists) await File(repoConfig).create();
+  if (!exists) {
+    await File(repoConfig).create(
+      recursive: true,
+    );
+  }
   await runSdkManager(
-    args: [
-      'platform-tools',
-      'platforms;android-29',
-      'build-tools;29.0.3',
-    ],
-    verbose: true,
+    content: 'Installing Platform Tools',
+    arg: 'platform-tools',
+    verbose: isDebug,
     toolsPath: toolsPath,
   );
   await runSdkManager(
-    args: ['--update'],
-    verbose: true,
+    content: 'Installing Platform Android 29',
+    arg: 'platforms;android-29',
+    verbose: isDebug,
     toolsPath: toolsPath,
   );
   await runSdkManager(
-    args: ['--licenses'],
-    verbose: true,
+    content: 'Installing Build Tools 29.0.3',
+    arg: 'build-tools;29.0.3',
+    verbose: isDebug,
     toolsPath: toolsPath,
   );
-  stdout.writeln('[ANDROID] Updated');
+  await runSdkManager(
+    content: 'Checking for update',
+    arg: '--update',
+    verbose: isDebug,
+    toolsPath: toolsPath,
+  );
+  await runSdkManager(
+    content: 'Checking for licenses',
+    arg: '--licenses',
+    verbose: isDebug,
+    toolsPath: toolsPath,
+  );
+  stdout.writeln('[ANDROID] Installed and Updated [FINISH]');
 }
 
 Future<void> runSdkManager({
-  List<String> args,
+  String content = '',
+  String arg = '',
   bool verbose = false,
   @required String toolsPath,
 }) async {
+  stdout.writeln('[ANDROID] $content');
   try {
+    var accScript = 'for(\$i=0;\$i -lt 15;\$i++)'
+        ' { \$response += "y`n" }; '
+        '\$response'
+        ' | '
+        '.\\sdkmanager $arg';
     await run(
-      '.\\sdkmanager',
-      args,
+      'powershell $accScript',
+      [],
       workingDirectory: toolsPath,
       environment: environment,
       verbose: verbose,
-      stdin: s.sharedStdIn,
     );
   } catch (e) {
     await errorLog(e);
@@ -271,11 +357,11 @@ Future<void> setPathEnvironment({
   String title = 'unknown',
   @required String newPath,
 }) async {
-  var oldPath = fixPath(environment['PATH']);
+  var finalPath = fixPath('${environment['PATH']};$newPath');
   await setVariableEnvironment(
     title: title,
     variable: 'PATH',
-    value: '$oldPath$newPath',
+    value: '$finalPath',
   );
 }
 
@@ -296,13 +382,13 @@ Future<void> setVariableEnvironment({
   if (verbose.contains('SUCCESS')) {
     stdout.writeln('[$title] Success update $variable');
   } else {
-    stderr.writeln(verbose);
+    stderr.writeln('[$title] Failed update $variable');
     await errorLog(verbose);
   }
-  var fixValue = fixPath(environment[variable]);
+  var finalPath = fixPath('${environment[variable]};$value');
   environment.addAll(
     <String, String>{
-      variable: '$fixValue$value',
+      variable: '$finalPath',
     },
   );
 }
@@ -311,13 +397,18 @@ String fixPath(String oldPath) {
   var path = '';
   var oldSplit = oldPath?.split(';')?.toSet() ?? <String>{};
   for (var i = 0; i < oldSplit.length; i++) {
-    if (oldSplit.toList()[i].isNotEmpty) path += '${oldSplit.toList()[i]};';
+    var newPath = oldSplit?.toList()[i] ?? '';
+    if (newPath.isNotEmpty && newPath != 'null') {
+      path += '${oldSplit.toList()[i]};';
+    }
+  }
+  if (path.endsWith(';')) {
+    path = path.replaceRange(path.length - 1, null, '');
   }
   return path;
 }
 
-Future<void> finish() async {
-  var text = ' FINISH ';
+void showText(String text) {
   var border = String.fromCharCodes(
     List<int>.generate(
       (stdout.terminalColumns - text.length) ~/ 2,
@@ -327,8 +418,6 @@ Future<void> finish() async {
   stdout.write(
     '\n' + border + text + border + '\n',
   );
-  stdin.readLineSync();
-  exit(0);
 }
 
 Future<Null> errorLog(e) async {
@@ -337,8 +426,8 @@ Future<Null> errorLog(e) async {
     '${DateTime.now()}\t: $e\n${StackTrace.current}\n',
     mode: FileMode.append,
   );
-  stderr.write(
-    'Sorry. Failed to install.\n$e\nPlease send log file (${logFile.absolute.path})',
+  stderr.writeln(
+    'Sorry. Failed to install.\n$e\nPlease send log file (${logFile.absolute.path}).\nClose this windows or double `Enter`.',
   );
   stdin.readLineSync();
   exit(2);

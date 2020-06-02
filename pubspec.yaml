@@ -1,6 +1,6 @@
 name: flutter_installer_cli
 description: Installer for Flutter SDK, include Android SDK and Java SDK (if not exists).
-version: 0.2.0
+version: 0.2.1
 authors: Abiyyu Daffa Alam <daffaalam@gmail.com>
 repository: https://github.com/daffaalam/flutter_installer_dart
 environment:
