@@ -6,6 +6,8 @@ import 'package:archive/archive.dart';
 import 'package:process_run/process_run.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/shell_run.dart' as s;
+import 'package:pub_semver/pub_semver.dart';
+import 'package:yaml/yaml.dart';
 
 import '../model/flutter_releases.dart';
 import '../model/java_releases.dart';
@@ -13,6 +15,7 @@ import '../model/java_releases.dart';
 bool isDebug = false;
 String installationPath = '';
 Map<String, String> environment = <String, String>{};
+String githubRepos = 'https://github.com/daffaalam/flutter_installer_cli';
 
 Future<bool> checkPowerShell() async {
   try {
@@ -100,10 +103,10 @@ Future<Response> downloadFile({
       '$urlPath',
       '$savePath',
       onReceiveProgress: (int count, int total) {
-        var percent = 100 ~/ (total / count);
+        var percent = (count / total * 100).toStringAsFixed(0);
         stdout.write('\r' '[$title] Receive $count Of $total ($percent%)');
         if (count == total) {
-          stdout.write('\n[$title] Download $content [FINISH]\n');
+          stdout.write('\n[$title] Downloading $content [FINISH]\n');
         }
       },
     );
@@ -139,7 +142,7 @@ Future<void> extractZip({
         await dir.create(recursive: true);
       }
     }
-    stdout.write('\n[$title] Extract $content [FINISH]\n');
+    stdout.write('\n[$title] Extracting $content [FINISH]\n');
   } catch (e) {
     await errorLog(e);
   }
@@ -156,7 +159,7 @@ Future<bool> checkAndroidStudio() async {
     var version = studioPath.replaceAll('$userHomePath\\.AndroidStudio', '');
     var home = await File('$studioPath\\system\\.home').readAsString();
     stdout.writeln(
-      '[STUDIO] Android Studio $version already installed on $home',
+      '[STUDIO] Android Studio $version already installed on ${home.trim()}',
     );
     return studio;
   } catch (e) {
@@ -187,7 +190,7 @@ Future<void> installFlutter({
       }
       await extractZip(
         title: 'FLUTTER',
-        content: 'flutter ${releases.version}',
+        content: 'Flutter ${releases.version}',
         filePath: flutterZipPath,
         savePath: '${installationPath}\\',
       );
@@ -380,9 +383,9 @@ Future<void> setVariableEnvironment({
   );
   var verbose = '${result.stdout ?? result.stderr}';
   if (verbose.contains('SUCCESS')) {
-    stdout.writeln('[$title] Success update $variable');
+    stdout.writeln('[$title] Updated $variable successfully');
   } else {
-    stderr.writeln('[$title] Failed update $variable');
+    stderr.writeln('[$title] Failed to update $variable');
     await errorLog(verbose);
   }
   var finalPath = fixPath('${environment[variable]};$value');
@@ -420,6 +423,54 @@ void showText(String text) {
   );
 }
 
+Future<void> vscodeInstallExtension() async {
+  try {
+    stdout.writeln('[VSCODE] Installing extensions [START]');
+    var args = <String>[
+      '--install-extension dart-code.flutter --force',
+      '--install-extension dart-code.dart-code --force',
+    ];
+    var result = await run(
+      'code ${args.join(' ')}',
+      [],
+      verbose: isDebug,
+    );
+    var verbose = '${result.stdout ?? result.stderr}'.toLowerCase();
+    if (verbose.contains('failed')) {
+      stdout.writeln('[VSCODE] Failed installing extensions [FINISH]');
+    } else {
+      stdout.writeln('[VSCODE] Extension was successfully installed [FINISH]');
+    }
+  } catch (e) {
+    await errorLog(e);
+  }
+}
+
+Future<void> checkLatestVersion() async {
+  try {
+    var response = await Dio(
+      BaseOptions(
+        responseType: ResponseType.plain,
+      ),
+    ).get(
+      'https://raw.githubusercontent.com/daffaalam/flutter_installer_cli/master/pubspec.yaml',
+    );
+    var cloudVer = Version.parse(loadYaml(response.data)['version']);
+    var localVer = Version.parse('0.2.2');
+    if (cloudVer > localVer) {
+      stdout.writeln(
+        '\nThe latest version found, please use the latest version for a better experience.\n'
+        'Download it at $githubRepos/releases/latest.',
+      );
+      var ignore = await promptConfirm('Continue with the old version');
+      if (!ignore) exit(0);
+      stdout.write('\n');
+    }
+  } catch (e) {
+    stdout.writeln('\nCan not find the latest version.\n');
+  }
+}
+
 Future<Null> errorLog(e) async {
   var logFile = File('flutter_installer_error.log');
   await logFile.writeAsString(
@@ -427,7 +478,9 @@ Future<Null> errorLog(e) async {
     mode: FileMode.append,
   );
   stderr.writeln(
-    'Sorry. Failed to install.\n$e\nPlease send log file (${logFile.absolute.path}).\nClose this windows or double `Enter`.',
+    'Sorry. Failed to install.\n$e\n'
+    'Please send an error log (${logFile.absolute.path}) to the github issue ($githubRepos/issues).\n'
+    'Close this window or double `Enter`.',
   );
   stdin.readLineSync();
   exit(2);
