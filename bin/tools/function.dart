@@ -16,6 +16,7 @@ import '../model/android_studio.dart';
 import '../model/flutter_releases.dart';
 import '../model/java_releases.dart';
 
+Version version = Version.parse('0.2.3');
 bool isDebug = false;
 String installationPath = '';
 String flutterChannel = '';
@@ -563,8 +564,7 @@ Future<void> checkLatestVersion() async {
     var dio = Dio(BaseOptions(responseType: ResponseType.plain));
     var response = await dio.get('$githubRepos/raw/master/pubspec.yaml');
     var cloudVer = Version.parse(loadYaml(response.data)['version']);
-    var localVer = Version.parse('0.2.2');
-    if (cloudVer > localVer) {
+    if (cloudVer > version) {
       stdout.writeln(
         '\nThe latest version found, please use the latest version for a better experience.\n'
         'Download it at $githubRepos/releases/latest.',

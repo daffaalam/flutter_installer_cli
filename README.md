@@ -10,7 +10,7 @@ Please remember the [system requirements](https://flutter.dev/docs/get-started/i
 
 Download **[here](https://github.com/daffaalam/flutter_installer_cli/releases/latest)** and run right away.
 
-By default it will take the latest flutter version from the stable channel. If you want to use another version, use the `channel` and` version` flags. Use the version name from https://flutter.dev/docs/development/tools/sdk/releases.
+By default it will take the latest flutter version from the stable channel. If you want to use another version, use the `channel` and `version` flags. Use the version name from https://flutter.dev/docs/development/tools/sdk/releases.
 
 For example to get the latest beta channel:
 ```
@@ -20,7 +20,7 @@ You can also choose the version:
 ```
 flutter_installer_cli --version v1.12.13+hotfix.9
 ```
-You can also combine the two:
+You can also combine two flags:
 ```
 flutter_installer_cli --channel beta --version v1.14.6
 ```
