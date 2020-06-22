@@ -6,10 +6,13 @@ import 'package:process_run/which.dart';
 
 import 'tools/function.dart';
 
-void main() async {
+void main(List<String> args) async {
   try {
-    isDebug = false; // TODO : for testing only (show all verbose)
     environment.addAll(Platform.environment);
+
+    parseArgs(args);
+
+    await run('chcp 437 > nul', []);
 
     var powerShell = await checkPowerShell();
     if (!powerShell && Platform.isWindows) {
@@ -42,7 +45,7 @@ void main() async {
       if (!exists) await Directory(installationPath).create(recursive: true);
       var studio = await checkAndroidStudio();
       var later = false;
-      if (!studio) {
+      if (studio == null) {
         later = await promptConfirm(
           'Android Studio is not installed. Do you want to install the full package (Flutter without Android Studio)?',
         );
@@ -65,8 +68,13 @@ void main() async {
       await installFlutter(
         operatingSystem: operatingSystem,
       );
+      if (studio != null) {
+        await androidStudioInstallExtensions(
+          studio: studio,
+        );
+      }
       if (vscodePath != null) {
-        await vscodeInstallExtension();
+        await vscodeInstallExtensions();
       }
       if (gitPath == null) {
         await stdout.writeln(
@@ -93,7 +101,7 @@ void main() async {
     showText(' FINISH ');
     stdin.readLineSync();
     exit(0);
-  } catch (e) {
-    await errorLog(e);
+  } catch (e, s) {
+    await errorLog(e, s);
   }
 }
