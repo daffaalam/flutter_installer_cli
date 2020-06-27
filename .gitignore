@@ -11,3 +11,4 @@ doc/api/
 # Custom
 *.exe
 *.log
+*.env
