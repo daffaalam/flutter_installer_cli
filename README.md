@@ -9,9 +9,24 @@ Installation toolkit for Flutter SDK, including Android SDK and Java SDK if not 
 
 ## How to run
 
+**Download [here](https://github.com/daffaalam/flutter_installer_cli/releases/latest), extract and run right away.**
+
 Please remember the system requirements ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirements)) needed before running this application.
 
-**Download [here](https://github.com/daffaalam/flutter_installer_cli/releases/latest), extract and run right away.**
+#### Custom Installation Path
+
+By default flutter will be installed in `C:\Development` for windows and `~/Development` for linux. For custom installation path you can use the `path` flag.
+
+For Windows example:
+```
+flutter_installer_cli --path E:\Dev
+```
+or Linux example:
+```
+flutter_installer_cli --path /home/user/Dev
+```
+
+#### Custom Flutter Version
 
 By default it will take the latest flutter version from the stable channel. If you want to use another version, use the `channel` and `version` flags. Use the version name from https://flutter.dev/docs/development/tools/sdk/releases.
 
@@ -19,11 +34,11 @@ For example to get the latest beta channel:
 ```
 flutter_installer_cli --channel beta
 ```
-You can also choose the version:
+you can also choose the version:
 ```
 flutter_installer_cli --version v1.12.13+hotfix.9
 ```
-You can also combine two flags:
+and can also combine two flags:
 ```
 flutter_installer_cli --channel beta --version v1.14.6
 ```
@@ -43,6 +58,7 @@ If the version and channel do not find a match, it will retrieve the latest this
 - [x] Install Android SDK, Java SDK, and Flutter SDK.
 - [x] Install Flutter and Dart plugin for Visual Studio Code and Android Studio.
 - [x] Choose the previous flutter version.
+- [x] Choose a custom installation path.
 
 ## TODO
 
@@ -50,7 +66,6 @@ If the version and channel do not find a match, it will retrieve the latest this
 - [ ] high - Implementation to MacOS.
 - [ ] low - Pretty and simple code.
 - [ ] high - Implementation to the GUI (flutter) version.
-- [ ] high - Can choose a custom installation path.
 
 ## Running the tests
 

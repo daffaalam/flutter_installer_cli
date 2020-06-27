@@ -5,20 +5,12 @@ import 'package:process_run/shell.dart';
 import 'package:process_run/which.dart';
 
 import '../config.dart';
-import '../tool.dart';
 import 'install_android.dart';
 import 'install_flutter.dart';
 import 'install_ide.dart';
 import 'install_java.dart';
 
 Future<void> installFullPackage() async {
-  if (Platform.isWindows) {
-    installationPath = userHomePath.split('\\')[0];
-  } else {
-    installationPath = userHomePath;
-  }
-  installationPath += '/Development';
-  installationPath = fixPathPlatform(installationPath);
   stdout.writeln('\nFlutter will be installed in $installationPath\n');
   var exists = await Directory(installationPath).exists();
   if (!exists) await Directory(installationPath).create(recursive: true);

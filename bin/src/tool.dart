@@ -17,8 +17,14 @@ import 'config.dart';
 void parseArgs(List<String> args) {
   var parse = ArgParser();
   parse.addOption(
+    'path',
+    valueHelp: 'custom-path',
+    defaultsTo: defaultInstallationPath(),
+    callback: initInstallationPath,
+  );
+  parse.addOption(
     'channel',
-    valueHelp: 'flutter channel',
+    valueHelp: 'flutter-channel',
     help: 'If the version and channel do not find a match, '
         'it will retrieve the latest this channel version.',
     allowed: <String>['stable', 'beta', 'dev'],
@@ -34,7 +40,7 @@ void parseArgs(List<String> args) {
         '(https://flutter.dev/docs/development/tools/sdk/releases). '
         'Example: --version v1.9.1+hotfix.6\n'
         '(defaults to check the latest version)',
-    valueHelp: 'flutter version',
+    valueHelp: 'flutter-version',
     callback: (String value) {
       value ??= '';
       flutterVersion = value;
@@ -65,6 +71,22 @@ void parseArgs(List<String> args) {
   } on ArgParserException {
     stdout.writeln('${parse.usage}');
     exit(1);
+  }
+}
+
+String defaultInstallationPath() {
+  var path = Platform.isWindows ? userHomePath.split('\\')[0] : userHomePath;
+  path += '/Development';
+  return fixPathPlatform(path);
+}
+
+Future<void> initInstallationPath(String path) async {
+  path ??= '';
+  if (path.isEmpty) {
+    installationPath = defaultInstallationPath();
+  } else {
+    path = path.replaceFirst('~', userHomePath);
+    installationPath = fixPathPlatform(path);
   }
 }
 
@@ -329,9 +351,6 @@ String fixPathPlatform(String path) {
   path = Platform.isWindows
       ? path.replaceAll('/', '\\')
       : path.replaceAll('\\', '/');
-  path = Platform.isWindows
-      ? path.replaceAll(':', ';')
-      : path.replaceAll(';', ':');
   return path;
 }
 
