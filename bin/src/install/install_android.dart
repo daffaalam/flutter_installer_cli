@@ -16,8 +16,7 @@ Future<void> installAndroid() async {
   // https://stackoverflow.com/questions/60460429/android-studio-installs-without-sdkmanager
   var os = Platform.isMacOS ? 'darwin' : Platform.operatingSystem;
   var androidZipName = 'sdk-tools-$os-4333796.zip';
-  var androidZipPath = 'flutter_installer/$androidZipName';
-  androidZipPath = fixPathPlatform(androidZipPath);
+  var androidZipPath = fixPathPlatform(downloadDir + androidZipName, File);
   var exists = await File(androidZipPath).exists();
   if (!exists) {
     await downloadFile(
@@ -31,7 +30,7 @@ Future<void> installAndroid() async {
     title: 'ANDROID',
     content: 'Android Tools 26.1.1',
     filePath: androidZipPath,
-    savePath: '$installationPath/',
+    savePath: installationPath,
   );
   await setVariableEnvironment(
     title: 'ANDROID',
@@ -60,8 +59,10 @@ Future<void> updateAndroid({
   @required String toolsPath,
 }) async {
   stdout.writeln('[ANDROID] Installing and Updating [START]');
-  toolsPath = fixPathPlatform(toolsPath);
-  var repoConfig = fixPathPlatform('$userHomePath/.android/repositories.cfg');
+  var repoConfig = fixPathPlatform(
+    '$userHomePath/.android/repositories.cfg',
+    File,
+  );
   var exists = await File(repoConfig).exists();
   if (!exists) await File(repoConfig).create(recursive: true);
   await runSdkManager(
@@ -134,7 +135,7 @@ Future<bool> checkAndroidTools({
 }) async {
   try {
     var result = await run(
-      fixPathPlatform('./sdkmanager'),
+      fixPathPlatform('./sdkmanager', File),
       ['--version'],
       workingDirectory: toolsPath,
       environment: environment,

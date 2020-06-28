@@ -20,9 +20,9 @@ Future<void> installFlutter() async {
   var release = fixFlutterVersion(flutterReleases);
   var flutterZipPath = '${release.archive}'.replaceFirst(
     '${channelValues.reverse[release.channel]}/${Platform.operatingSystem}',
-    'flutter_installer',
+    '',
   );
-  flutterZipPath = fixPathPlatform(flutterZipPath);
+  flutterZipPath = fixPathPlatform(downloadDir + flutterZipPath, File);
   var exists = await File(flutterZipPath).exists();
   if (!exists) {
     await downloadFile(
@@ -36,7 +36,7 @@ Future<void> installFlutter() async {
     title: 'FLUTTER',
     content: 'Flutter ${release.version}',
     filePath: flutterZipPath,
-    savePath: '${installationPath}/',
+    savePath: installationPath,
   );
   await setPathEnvironment(
     title: 'FLUTTER',

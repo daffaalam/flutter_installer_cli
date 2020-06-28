@@ -16,21 +16,21 @@ Future<AndroidStudio> checkAndroidStudio() async {
       if (dir.path.contains('.AndroidStudio')) studioPath = dir.path;
     }
     var version = studioPath.replaceAll(
-      fixPathPlatform('$userHomePath/.AndroidStudio'),
+      fixPathPlatform('$userHomePath/.AndroidStudio', File),
       '',
     );
     var home = await File(
-      fixPathPlatform('$studioPath/system/.home'),
+      fixPathPlatform('$studioPath/system/.home', File),
     ).readAsString();
     var build = await File(
-      fixPathPlatform('$home/build.txt'),
+      fixPathPlatform('$home/build.txt', File),
     ).readAsString();
     stdout.writeln(
       '[ANDROID STUDIO] Android Studio $version already installed on ${home.trim()}',
     );
     return AndroidStudio(
       home: home.trim(),
-      config: fixPathPlatform('$studioPath/config'),
+      config: fixPathPlatform('$studioPath/config', File),
       build: build.trim(),
     );
   } catch (e) {
@@ -62,7 +62,9 @@ Future<void> vscodeInstallExtensions() async {
 Future<void> androidStudioInstallExtensions({
   @required AndroidStudio studio,
 }) async {
-  var pluginsPath = Directory(fixPathPlatform('${studio.config}/plugins/'));
+  var pluginsPath = Directory(
+    fixPathPlatform('${studio.config}/plugins', Directory),
+  );
   var plugins = await pluginsPath.list().toList();
   var dartPlugin = false;
   var flutterPlugin = false;
@@ -74,7 +76,8 @@ Future<void> androidStudioInstallExtensions({
     await installPluginAS(
       content: 'Dart plugin for Android Studio',
       savePath: fixPathPlatform(
-        'flutter_installer/DartPlugin-${studio.build}.zip',
+        downloadDir + '/DartPlugin-${studio.build}.zip',
+        File,
       ),
       id: 'Dart',
       build: studio.build,
@@ -85,7 +88,8 @@ Future<void> androidStudioInstallExtensions({
     await installPluginAS(
       content: 'Flutter plugin for Android Studio',
       savePath: fixPathPlatform(
-        'flutter_installer/FlutterPlugin-${studio.build}.zip',
+        downloadDir + '/FlutterPlugin-${studio.build}.zip',
+        File,
       ),
       id: 'io.flutter',
       build: studio.build,

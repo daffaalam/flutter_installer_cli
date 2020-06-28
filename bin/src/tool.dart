@@ -13,6 +13,7 @@ import 'package:yaml/yaml.dart';
 
 import '../model/flutter_releases.dart';
 import 'config.dart';
+import 'exception.dart';
 
 void parseArgs(List<String> args) {
   var parse = ArgParser();
@@ -77,7 +78,7 @@ void parseArgs(List<String> args) {
 String defaultInstallationPath() {
   var path = Platform.isWindows ? userHomePath.split('\\')[0] : userHomePath;
   path += '/Development';
-  return fixPathPlatform(path);
+  return fixPathPlatform(path, Directory);
 }
 
 Future<void> initInstallationPath(String path) async {
@@ -86,33 +87,35 @@ Future<void> initInstallationPath(String path) async {
     installationPath = defaultInstallationPath();
   } else {
     path = path.replaceFirst('~', userHomePath);
-    installationPath = fixPathPlatform(path);
+    installationPath = fixPathPlatform(path, Directory);
   }
 }
 
 Future<void> logNewRun() async {
-  if (isDebug) return;
+  environment.addAll(Platform.environment);
   var cont = await promptConfirm(
     '\nBefore continuing this, double-check the tools needed to run the Flutter.\n'
     'https://flutter.dev/docs/get-started/install/${Platform.operatingSystem}#system-requirements',
   );
   if (!cont) exit(0);
-  await sentryClient.capture(
-    event: Event(
-      loggerName: 'New Run',
-      release: '$version',
-      message: 'New Run',
-      level: SeverityLevel.info,
-      culprit: 'New Run',
-      contexts: Contexts(
-        operatingSystem: OperatingSystem(
-          name: Platform.operatingSystem,
-          version: Platform.operatingSystemVersion,
+  try {
+    if (isDebug) return;
+    await sentryClient.capture(
+      event: Event(
+        loggerName: 'New Run',
+        release: '$version',
+        message: 'New Run',
+        level: SeverityLevel.info,
+        culprit: 'New Run',
+        contexts: Contexts(
+          operatingSystem: OperatingSystem(
+            name: Platform.operatingSystem,
+            version: Platform.operatingSystemVersion,
+          ),
         ),
       ),
-    ),
-  );
-  environment.addAll(Platform.environment);
+    );
+  } catch (e) {}
 }
 
 Future<bool> checkPowerShell() async {
@@ -157,10 +160,9 @@ Future<Response> downloadFile({
   @required String savePath,
 }) async {
   stdout.writeln('[$title] Downloading $content [START]');
-  savePath = Directory(fixPathPlatform(savePath)).absolute.path;
   var _response = await Dio().download(
-    '$urlPath',
-    '$savePath',
+    urlPath,
+    savePath,
     onReceiveProgress: (int count, int total) {
       var percent = (count / total * 100).toStringAsFixed(0);
       stdout.write('\r' '[$title] Receive $count Of $total ($percent%)');
@@ -180,10 +182,8 @@ Future<void> extractZip({
   @required String savePath,
 }) async {
   stdout.writeln('[$title] Extracting $content [START]');
-  filePath = fixPathPlatform(filePath);
-  savePath = Directory(fixPathPlatform(savePath)).absolute.path;
+  savePath = fixPathPlatform(savePath, Directory);
   if (filePath.endsWith('.tar.xz')) {
-    filePath = File(filePath).absolute.path;
     await run(
       'tar',
       ['-xf', filePath],
@@ -205,18 +205,18 @@ Future<void> extractZip({
     var oldName = dirName.replaceRange(dirName.length - 1, null, '') + '.old';
     var existsOld = await Directory(oldName).exists();
     if (existsOld) await Directory(oldName).delete(recursive: true);
-    var existsNew = await Directory(archive[0].name).exists();
-    if (existsNew) await Directory(archive[0].name).rename(oldName);
+    var existsNew = await Directory(dirName).exists();
+    if (existsNew) await Directory(dirName).rename(oldName);
     for (var i = 0; i < archive.length; i++) {
-      var files = archive[i];
-      var filename = files.name;
       stdout.write('\r' '[$title] Create ${i + 1} Of ${archive.length}');
+      var files = archive[i];
+      var filename = savePath + files.name;
       if (files.isFile) {
-        var file = File(savePath + filename);
+        var file = File(filename);
         await file.create(recursive: true);
         await file.writeAsBytes(files.content as List<int>);
       } else {
-        await Directory(savePath + filename).create(recursive: true);
+        await Directory(filename).create(recursive: true);
       }
     }
   }
@@ -237,7 +237,7 @@ Future<void> setPathEnvironment({
   await setVariableEnvironment(
     title: title,
     variable: 'PATH',
-    value: '$path',
+    value: path,
   );
 }
 
@@ -246,7 +246,7 @@ Future<void> setVariableEnvironment({
   @required String variable,
   @required String value,
 }) async {
-  value = fixPathPlatform(value);
+  value = fixPathPlatform(value, File);
   if (Platform.isWindows) {
     var result = await run(
       'setx',
@@ -254,7 +254,7 @@ Future<void> setVariableEnvironment({
       verbose: verboseShow,
     );
     var verbose = fixVerbose(result.stdout, result.stderr);
-    if (verbose.contains('SUCCESS')) {
+    if (verbose.toUpperCase().contains('SUCCESS')) {
       stdout.writeln('[$title] Updated $variable successfully');
     } else {
       stderr.writeln('[$title] Failed to update $variable');
@@ -280,9 +280,10 @@ Future<void> setVariableEnvironment({
       stdout.writeln('[$title] Updated $variable successfully');
     }
   }
+  value = fixPath('${environment[variable]};$value');
   environment.addAll(
     <String, String>{
-      variable: fixPath('${environment[variable]};$value'),
+      variable: fixPath(value),
     },
   );
 }
@@ -294,7 +295,6 @@ Future<void> runSdkManager({
   @required String toolsPath,
 }) async {
   stdout.writeln('[ANDROID] $content');
-  toolsPath = Directory(toolsPath).absolute.path;
   var script = '';
   if (Platform.isWindows) {
     var accScript = 'for(\$i=0;\$i -lt 15;\$i++)'
@@ -307,7 +307,7 @@ Future<void> runSdkManager({
   await run(
     script,
     !Platform.isWindows ? [arg] : [],
-    workingDirectory: toolsPath,
+    workingDirectory: fixPathPlatform(toolsPath, Directory),
     environment: environment,
     stdin: !Platform.isWindows ? shell_run.sharedStdIn : null,
     verbose: !Platform.isWindows ? true : verbose,
@@ -331,14 +331,15 @@ Release fixFlutterVersion(FlutterReleases flutterReleases) {
 }
 
 String fixPath(String oldPath) {
-  oldPath = fixPathPlatform(oldPath);
+  if (!Platform.isWindows) oldPath = oldPath.replaceAll(';', ':');
+  oldPath = fixPathPlatform(oldPath, File);
   var path = '';
   var pattern = Platform.isWindows ? ';' : ':';
-  var oldSplit = oldPath?.split(pattern)?.toSet() ?? <String>{};
-  for (var i = 0; i < oldSplit.length; i++) {
-    var newPath = oldSplit?.toList()[i] ?? '';
-    if (newPath.isNotEmpty && newPath != 'null') {
-      path += '${oldSplit.toList()[i]}$pattern';
+  var splitOld = oldPath?.split(pattern)?.toSet() ?? <String>{};
+  for (var i = 0; i < splitOld.length; i++) {
+    var pathNew = splitOld?.toList()[i] ?? '';
+    if (pathNew.isNotEmpty && pathNew != 'null') {
+      path += '${fixPathPlatform(splitOld.toList()[i], File)}$pattern';
     }
   }
   if (path.endsWith(pattern)) {
@@ -347,11 +348,16 @@ String fixPath(String oldPath) {
   return path.trim();
 }
 
-String fixPathPlatform(String path) {
+String fixPathPlatform(String path, Type isDirectory) {
   path = Platform.isWindows
       ? path.replaceAll('/', '\\')
       : path.replaceAll('\\', '/');
-  return path;
+  path = path.replaceAll('//', '/');
+  path = path.replaceAll('\\\\', '\\');
+  if (path.endsWith(Platform.pathSeparator)) {
+    path = path.replaceRange(path.length - 1, null, '');
+  }
+  return isDirectory == Directory ? path + Platform.pathSeparator : path;
 }
 
 String fixVerbose(String out, String err) {
@@ -375,32 +381,37 @@ void showText(String text) {
   );
 }
 
-Future<Null> errorLog(e, s) async {
-  var logFile = File('flutter_installer_error.log');
+Future<Null> errorLog(dynamic e, StackTrace s) async {
+  var tempLog = fixPathPlatform(runDir + '/flutter_installer_error.log', File);
+  var logFile = File(tempLog);
+  var exception = exceptionLog(e);
+  s ??= StackTrace.current;
   await logFile.writeAsString(
-    '${DateTime.now()}\n$e\n$s\n'.trim(),
+    '${DateTime.now()}\n$e\n$s\n',
     mode: FileMode.writeOnlyAppend,
   );
   stderr.writeln(
     '\n'
-    'Sorry. Failed to install.\n$e\n'
+    'Sorry. Failed to install.\n$exception\n'
     'Please send an error log to the github issue ($githubRepos/issues).\n'
     'File: ${logFile.absolute.path}.\n'
     'Close this window or double `Enter`.',
   );
-  if (isDebug) return;
-  s ??= StackTrace.current;
   var context = Contexts(
     operatingSystem: OperatingSystem(
+      name: Platform.operatingSystem,
       version: Platform.operatingSystemVersion,
     ),
   );
-  await sentryClient.capture(
-    event: Event(
-      release: '$version',
-      exception: e,
-      stackTrace: s,
-      contexts: context,
-    ),
-  );
+  try {
+    if (isDebug) return;
+    await sentryClient.capture(
+      event: Event(
+        release: '$version',
+        exception: e,
+        stackTrace: s,
+        contexts: context,
+      ),
+    );
+  } catch (e) {}
 }

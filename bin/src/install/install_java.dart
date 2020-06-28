@@ -40,7 +40,7 @@ Future<int> checkJavaVersion() async {
 Future<void> installJava() async {
   var javaReleases = await getJavaLatestInfo();
   var binary = javaReleases.binaries[0];
-  var javaZipPath = fixPathPlatform('flutter_installer/${binary.binaryName}');
+  var javaZipPath = fixPathPlatform(downloadDir + binary.binaryName, File);
   var exists = await File(javaZipPath).exists();
   if (!exists) {
     await downloadFile(
@@ -54,7 +54,7 @@ Future<void> installJava() async {
     title: 'JAVA',
     content: 'Java ${binary.versionData.semver}',
     filePath: javaZipPath,
-    savePath: '${installationPath}/',
+    savePath: installationPath,
   );
   var javaPackage = '${binary.binaryType}'
       '${binary.versionData.openjdkVersion}';

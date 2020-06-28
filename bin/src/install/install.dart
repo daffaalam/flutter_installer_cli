@@ -14,7 +14,7 @@ Future<void> installFullPackage() async {
   stdout.writeln('\nFlutter will be installed in $installationPath\n');
   var exists = await Directory(installationPath).exists();
   if (!exists) await Directory(installationPath).create(recursive: true);
-  var fullPackage = true;
+  var fullPackage = false;
   var studio = await checkAndroidStudio();
   if (studio == null) {
     fullPackage = await promptConfirm(
@@ -47,15 +47,9 @@ Future<void> installFullPackage() async {
     );
   }
   await installFlutter();
-  if (studio != null) {
-    await androidStudioInstallExtensions(
-      studio: studio,
-    );
-  }
+  if (studio != null) await androidStudioInstallExtensions(studio: studio);
   var vscodePath = await which('code');
-  if (vscodePath != null) {
-    await vscodeInstallExtensions();
-  }
+  if (vscodePath != null) await vscodeInstallExtensions();
   var gitPath = await which('git');
   if (gitPath == null) {
     await stdout.writeln(
@@ -85,8 +79,6 @@ Future<void> installWithOutAndroidStudio({
   if (androidPath == null) {
     await installAndroid();
   } else {
-    await updateAndroid(
-      toolsPath: Directory(androidPath).parent.path,
-    );
+    await updateAndroid(toolsPath: Directory(androidPath).parent.path);
   }
 }
