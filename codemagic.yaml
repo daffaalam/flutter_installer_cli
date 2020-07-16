@@ -11,6 +11,7 @@ workflows:
           include: true
           source: true
     scripts:
+      - pub get
       - dart2native bin/flutter_installer_cli.dart -o flutter_installer_cli
       - pub global activate pubspec_version
       - touch $(pubver get)-release.version
