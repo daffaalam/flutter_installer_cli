@@ -1,0 +1,19 @@
+workflows:
+  flutter-package:
+    name: Dart App
+    environment:
+      flutter: dev
+    triggering:
+      events:
+        - tag
+      branch_patterns:
+        - pattern: '*'
+          include: true
+          source: true
+    scripts:
+      - dart2native bin/flutter_installer_cli.dart -o flutter_installer_cli
+      - pub global activate pubspec_version
+      - touch $(pubver get)-release.version
+    artifacts:
+      - '*.version'
+      - flutter_installer_cli
