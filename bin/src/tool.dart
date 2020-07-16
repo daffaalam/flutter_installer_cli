@@ -260,24 +260,33 @@ Future<void> setVariableEnvironment({
       stderr.writeln('[$title] Failed to update $variable');
     }
   } else {
-    var bashProfile = File('$userHomePath/.bashrc');
-    var exists = await bashProfile.exists();
-    if (!exists) await bashProfile.create(recursive: true);
-    var lines = await bashProfile.readAsLines();
-    var contains = false;
-    for (var line in lines) {
-      line = line.toUpperCase();
-      var v1 = variable.toUpperCase();
-      var v2 = value.toUpperCase();
-      if (line.contains(v1) && line.contains(v2)) contains = true;
+    var shell = 'bash';
+    if (environment['SHELL'] != null) {
+      shell = environment['SHELL'].split('/').last;
     }
-    if (!contains) {
-      var script = variable == 'PATH' ? '$variable=\$$variable:' : '$variable=';
-      await bashProfile.writeAsString(
-        '\nexport $script$value',
-        mode: FileMode.writeOnlyAppend,
-      );
-      stdout.writeln('[$title] Updated $variable successfully');
+    var fileRc = '.${shell}rc';
+    try {
+      var bashProfile = File('$userHomePath/$fileRc');
+      var exists = await bashProfile.exists();
+      if (!exists) await bashProfile.create(recursive: true);
+      var lines = await bashProfile.readAsLines();
+      var contains = false;
+      for (var line in lines) {
+        line = line.toUpperCase();
+        var v1 = variable.toUpperCase();
+        var v2 = value.toUpperCase();
+        if (line.contains(v1) && line.contains(v2)) contains = true;
+      }
+      if (!contains) {
+        var script = variable == 'PATH' ? '\$$variable:' : '';
+        await bashProfile.writeAsString(
+          '\nexport $variable=${script}$value',
+          mode: FileMode.writeOnlyAppend,
+        );
+        stdout.writeln('[$title] Updated $variable on $fileRc successfully');
+      }
+    } catch (e) {
+      stdout.writeln('[$title] Failed to update $variable on $fileRc');
     }
   }
   value = fixPath('${environment[variable]};$value');

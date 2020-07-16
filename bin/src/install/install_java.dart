@@ -9,7 +9,7 @@ import '../tool.dart';
 
 Future<JavaReleases> getJavaLatestInfo() async {
   stdout.writeln('[JAVA] Getting latest version info...');
-  var os = Platform.operatingSystem.replaceAll('os', '');
+  var os = Platform.isMacOS ? 'mac' : Platform.operatingSystem;
   var _response = await Dio().get(
     'https://api.adoptopenjdk.net/v2/info/releases/openjdk8',
     queryParameters: <String, String>{

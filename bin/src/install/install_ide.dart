@@ -11,12 +11,21 @@ import '../tool.dart';
 Future<AndroidStudio> checkAndroidStudio() async {
   try {
     var studioPath = '';
-    var listDir = await Directory('$userHomePath').list().toList();
+    var studioPrefix = '';
+    var macDir = Platform.isMacOS ? '/Library/Preferences' : '';
+    var listDir = await Directory('$userHomePath$macDir').list().toList();
     for (var dir in listDir) {
-      if (dir.path.contains('.AndroidStudio')) studioPath = dir.path;
+      if (dir.path.contains('.AndroidStudio')) {
+        studioPath = dir.path;
+        studioPrefix = '.AndroidStudio';
+      }
+      if (dir.path.contains('AndroidStudio')) {
+        studioPath = dir.path;
+        studioPrefix = 'AndroidStudio';
+      }
     }
     var version = studioPath.replaceAll(
-      fixPathPlatform('$userHomePath/.AndroidStudio', File),
+      fixPathPlatform('$userHomePath$macDir/$studioPrefix', File),
       '',
     );
     var home = await File(
