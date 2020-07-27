@@ -5,8 +5,8 @@ import 'package:process_run/process_run.dart';
 import 'package:process_run/shell.dart';
 
 import '../../model/android_studio.dart';
-import '../config.dart';
-import '../tool.dart';
+import '../internal/config.dart';
+import '../internal/tool.dart';
 
 Future<AndroidStudio> checkAndroidStudio() async {
   try {

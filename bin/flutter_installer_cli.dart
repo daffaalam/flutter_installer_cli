@@ -3,18 +3,16 @@ import 'dart:io';
 import 'package:process_run/process_run.dart';
 import 'package:process_run/which.dart';
 
-import 'src/config.dart';
 import 'src/install/install.dart';
-import 'src/tool.dart';
+import 'src/internal/config.dart';
+import 'src/internal/debug.dart';
+import 'src/internal/tool.dart';
 
 void main(List<String> args) async {
   try {
     parseArgs(args);
-
     showText(' START ${isDebug ? '(DEBUG MODE) ' : ''}');
-
     await logNewRun();
-
     if (Platform.isWindows) {
       await run('chcp 437 > nul', []);
       await run(
@@ -31,9 +29,7 @@ void main(List<String> args) async {
         exit(0);
       }
     }
-
     await checkLatestVersion();
-
     var flutterPath = await which('flutter');
     if (flutterPath == null) {
       await installFullPackage();
@@ -49,6 +45,10 @@ void main(List<String> args) async {
       await run('flutter', ['upgrade'], verbose: true);
     }
     showText(' FINISH ');
+    stdout.write('\n');
+    stdout.writeln(
+      'please report to $githubRepos if it fails or something wrong',
+    );
     stdin.readLineSync();
     exit(0);
   } catch (e, s) {

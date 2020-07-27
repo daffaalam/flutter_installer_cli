@@ -1,91 +1,95 @@
 # Flutter Installer
 
+[English](README-en.md) | Indonesia
+
 [![GitHub issues](https://img.shields.io/github/issues/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/issues)
 [![GitHub forks](https://img.shields.io/github/forks/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/network)
 [![GitHub stars](https://img.shields.io/github/stars/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/stargazers)
 [![GitHub license](https://img.shields.io/github/license/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/blob/master/LICENSE)
 
-Installation toolkit for Flutter SDK, including Android SDK and Java SDK if not installed (automatic detection). Currently only for Windows and Linux. MacOS are under development.
+Toolkit instalasi untuk Flutter SDK, termasuk Android SDK dan Java SDK jika belum diinstal (deteksi otomatis).
 
-## How to run
+## Cara Menjalankannya
 
-**Download [here](https://github.com/daffaalam/flutter_installer_cli/releases/latest), extract and run right away.**
+**Unduh [di sini](https://github.com/daffaalam/flutter_installer_cli/releases/latest), ekstrak dan jalankan segera.**
 
-Please remember the system requirements ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirements)) needed before running this application.
+Harap ingat persyaratan sistem ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirement)/[macos](https://flutter.dev/docs/get-started/install/macos#system-requirement)) yang diperlukan sebelum menjalankan aplikasi ini.
 
-#### Custom Installation Path
+Tolong laporkan ke [issues](https://github.com/daffaalam/flutter_installer_cli/issues) jika gagal atau ada yang salah.
 
-By default flutter will be installed in `C:\Development` for windows and `~/Development` for linux. For custom installation path you can use the `path` flag.
+#### Jalur Instalasi Kustom
 
-For Windows example:
-```
-flutter_installer_cli --path E:\Dev
-```
-or Linux example:
-```
-flutter_installer_cli --path /home/user/Dev
-```
+Secara default flutter akan diinstal di `C:\Development` untuk Windows dan `~/Development` untuk Linux dan MacOS. Untuk jalur instalasi khusus Anda dapat menggunakan flag `path`.
 
-#### Custom Flutter Version
-
-By default it will take the latest flutter version from the stable channel. If you want to use another version, use the `channel` and `version` flags. Use the version name from https://flutter.dev/docs/development/tools/sdk/releases.
-
-For example to get the latest beta channel:
+Sebagai contoh pada Windows:
 ```
-flutter_installer_cli --channel beta
+.\flutter_installer_cli.exe --path E:\Dev
 ```
-you can also choose the version:
+atau contoh pada Linux dan MacOS:
 ```
-flutter_installer_cli --version v1.12.13+hotfix.9
-```
-and can also combine two flags:
-```
-flutter_installer_cli --channel beta --version v1.14.6
+./flutter_installer_cli --path /home/user/Dev
 ```
 
-If the version and channel do not find a match, it will retrieve the latest this channel version (by default it is a stable channel).
+#### Versi Flutter Kustom
 
-## Screenshots
+Secara default, ini akan mengambil versi flutter terbaru dari channel stable. Jika Anda ingin menggunakan versi lain, gunakan flag `channel` dan `version`. Gunakan nama versi dari https://flutter.dev/docs/development/tools/sdk/releases.
+
+Contoh untuk mendapatkan channel beta terbaru:
+```
+./flutter_installer_cli --channel beta
+```
+Anda juga dapat memilih versi:
+```
+./flutter_installer_cli --version v1.12.13+hotfix.9
+```
+dan juga dapat menggabungkan kedua flag:
+```
+./flutter_installer_cli --channel beta --version v1.14.6
+```
+
+Jika `version` dan `channel` tidak menemukan kecocokan, itu akan mengambil versi terbaru pada channel tersebut (secara default adalah channel stable).
+
+## Tangkapan Layar
 
 ![screenshot](screenshots/screenshot.png)
 
-## Features
+## Fitur
 
-- [x] Windows and Linux support.
-- [x] Detects whether Android Studio and or Visual Studio Code is already installed.
-- [x] Detects whether Android SDK, Java SDK and Flutter SDK are installed.
-- [x] Check the latest versions of Android SDK, Java SDK, and Flutter SDK.
-- [x] Install Android SDK, Java SDK, and Flutter SDK.
-- [x] Install Flutter and Dart plugin for Visual Studio Code and Android Studio.
-- [x] Choose the previous flutter version.
-- [x] Choose a custom installation path.
+- [x] Dukungan Windows, Linux, dan MacOS.
+- [x] Mendeteksi apakah Android Studio dan atau Visual Studio Code sudah diinstal.
+- [x] Mendeteksi apakah Android SDK, Java SDK dan Flutter SDK sudah diinstal.
+- [x] Periksa versi terbaru Android SDK, Java SDK, dan Flutter SDK.
+- [x] Menginstall Android SDK, Java SDK, dan Flutter SDK.
+- [x] Menginstal plugin Flutter dan Dart untuk Visual Studio Code dan Android Studio.
+- [x] Memilih versi Flutter sebelumnya.
+- [x] Memilih jalur instalasi khusus.
 
 ## TODO
 
-- [ ] low - Language improvement (I'm very bad at English).
-- [ ] high - Implementation to MacOS.
-- [ ] low - Pretty and simple code.
-- [ ] high - Implementation to the GUI (flutter) version.
+- [ ] low - Improvisasi bahasa.
+- [ ] low - Clean code.
+- [ ] high - Implementasi ke versi GUI (flutter).
 
-## Running the tests
+## Berkontribusi (Hanya Untuk Pengembang)
 
-1. Create a new virtual machine (Linux or Windows) with VirtualBox or everything.
-2. Run it from Command Prompt, PowerShell, or Terminal, don't run it from double click, so you can see the crash message before the program exits.
+Ketika ingin berkontribusi pada repositori ini, silakan bahas terlebih dahulu perubahan yang ingin Anda lakukan melalui [github issues](https://github.com/daffaalam/flutter_installer_cli/issues), [email](mailto:daffaalam@gmail.com), atau [metode lain](https://daffaalam.com/profile) dengan pemilik repositori ini sebelum melakukan perubahan.
 
-## Deployment
+### Menjalankan Tes
 
-1. Clone or download this [repository](https://github.com/daffaalam/flutter_installer_cli).
-2. Install `Dart` from https://dart.dev/get-dart.
-3. Run on project: `dart2native bin/flutter_installer_cli.dart`.
+1. Buat mesin virtual baru dengan VirtualBox atau semacamnya.
+2. Jalankan dari Command Prompt, PowerShell, atau Terminal, jangan jalankan langsung dari double klik, sehingga Anda dapat melihat pesan gagal sebelum program keluar.
 
-## Other
+### Deployment
 
-(Obsolete) Batch file (.bat) version [here](https://github.com/daffaalam/flutter-installer).
+1. Clone atau unduh [repositori](https://github.com/daffaalam/flutter_installer_cli) ini.
+2. Instal `Dart` dari https://dart.dev/get-dart.
+3. Jalankan dalam proyek: `dart2native bin/flutter_installer_cli.dart`.
+4. Tips: Jika Anda tidak memiliki MacOS, Anda bisa gunakan [CI/CD Codemagic](https://codemagic.io/).
 
-## Contributing
+## Lainnya
 
-When contributing to this repository, please first discuss the change you wish to make via [issue](https://github.com/daffaalam/flutter_installer_cli/issues), [email](mailto:daffaalam@gmail.com), or [any other method](https://s.id/bio-daffa) with the owners of this repository before making a change.
+(Usang) Versi file batch (.bat) [di sini](https://github.com/daffaalam/flutter-installer).
 
-## License
+## Lisensi
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Proyek ini dilisensikan di bawah Lisensi MIT - lihat file [LICENSE](LICENSE) untuk detailnya.

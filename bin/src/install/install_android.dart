@@ -7,8 +7,8 @@ import 'package:process_run/shell.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:xml/xml.dart';
 
-import '../config.dart';
-import '../tool.dart';
+import '../internal/config.dart';
+import '../internal/tool.dart';
 
 Future<void> installAndroid() async {
   // please stay this version for this issue

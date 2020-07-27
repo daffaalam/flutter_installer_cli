@@ -1,6 +1,6 @@
 name: flutter_installer_cli
-description: Installation toolkit for Java, Android, and Flutter SDK on Windows and Linux PCs.
-version: 0.3.3
+description: Installation toolkit for Java, Android, and Flutter SDK on Windows, Linux, and MacOS PCs.
+version: 0.4.0
 authors: Abiyyu Daffa Alam <daffaalam@gmail.com>
 repository: https://github.com/daffaalam/flutter_installer_dart
 issue_tracker: https://github.com/daffaalam/flutter_installer_dart/issues

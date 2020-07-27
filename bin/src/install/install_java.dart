@@ -4,13 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:process_run/process_run.dart';
 
 import '../../model/java_releases.dart';
-import '../config.dart';
-import '../tool.dart';
+import '../internal/config.dart';
+import '../internal/tool.dart';
 
 Future<JavaReleases> getJavaLatestInfo() async {
   stdout.writeln('[JAVA] Getting latest version info...');
   var os = Platform.isMacOS ? 'mac' : Platform.operatingSystem;
-  var _response = await Dio().get(
+  var response = await Dio().get(
     'https://api.adoptopenjdk.net/v2/info/releases/openjdk8',
     queryParameters: <String, String>{
       'openjdk_impl': 'hotspot',
@@ -21,7 +21,7 @@ Future<JavaReleases> getJavaLatestInfo() async {
       'heap_size': 'normal',
     },
   );
-  return JavaReleases.fromMap(_response.data);
+  return JavaReleases.fromMap(response.data);
 }
 
 Future<int> checkJavaVersion() async {

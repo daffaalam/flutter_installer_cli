@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/which.dart';
 
-import '../config.dart';
+import '../internal/config.dart';
 import 'install_android.dart';
 import 'install_flutter.dart';
 import 'install_ide.dart';
