@@ -17,7 +17,7 @@ Please remember the system requirements ([windows](https://flutter.dev/docs/get-
 
 Please report to [issues](https://github.com/daffaalam/flutter_installer_cli/issues) if it fails or something wrong.
 
-#### Custom Installation Path
+### Custom Installation Path
 
 By default flutter will be installed in `C:\Development` for Windows and `~/Development` for Linux and MacOS. For custom installation path you can use the `path` flag.
 
@@ -30,7 +30,7 @@ or for Linux and MacOS example:
 ./flutter_installer_cli --path /home/user/Dev
 ```
 
-#### Custom Flutter Version
+### Custom Flutter Version
 
 By default it will take the latest flutter version from the stable channel. If you want to use another version, use the `channel` and `version` flags. Use the version name from https://flutter.dev/docs/development/tools/sdk/releases.
 

@@ -17,7 +17,7 @@ Harap ingat persyaratan sistem ([windows](https://flutter.dev/docs/get-started/i
 
 Tolong laporkan ke [issues](https://github.com/daffaalam/flutter_installer_cli/issues) jika gagal atau ada yang salah.
 
-#### Jalur Instalasi Kustom
+### Jalur Instalasi Kustom
 
 Secara default flutter akan diinstal di `C:\Development` untuk Windows dan `~/Development` untuk Linux dan MacOS. Untuk jalur instalasi khusus Anda dapat menggunakan flag `path`.
 
@@ -30,7 +30,7 @@ atau contoh pada Linux dan MacOS:
 ./flutter_installer_cli --path /home/user/Dev
 ```
 
-#### Versi Flutter Kustom
+### Versi Flutter Kustom
 
 Secara default, ini akan mengambil versi flutter terbaru dari channel stable. Jika Anda ingin menggunakan versi lain, gunakan flag `channel` dan `version`. Gunakan nama versi dari https://flutter.dev/docs/development/tools/sdk/releases.
 
