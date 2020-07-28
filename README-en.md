@@ -1,19 +1,19 @@
 # Flutter Installer
 
-English | [Indonesia](README.md)
-
 [![GitHub issues](https://img.shields.io/github/issues/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/issues)
 [![GitHub forks](https://img.shields.io/github/forks/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/network)
 [![GitHub stars](https://img.shields.io/github/stars/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/stargazers)
 [![GitHub license](https://img.shields.io/github/license/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/blob/master/LICENSE)
 
-Installation toolkit for Flutter SDK, including Android SDK and Java SDK if not installed (automatic detection).
+English | [Indonesia](README.md)
+
+Installation toolkit for Flutter SDK, including Android SDK and Java SDK if not installed (automatic detection). If you cannot use github issues, you can contact directly to Telegram [@daffaalam](https://t.me/daffaalam).
 
 ## How to run
 
-**Download [here](https://github.com/daffaalam/flutter_installer_cli/releases/latest), extract and run right away.**
+**Download [HERE](https://github.com/daffaalam/flutter_installer_cli/releases/latest), extract and run right away.**
 
-Please remember the system requirements ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirement)/[macos](https://flutter.dev/docs/get-started/install/macos#system-requirement)) needed before running this application.
+Please remember the system requirements ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirement)/[macos](https://flutter.dev/docs/get-started/install/macos#system-requirement)) needed before running this application. On Linux and MacOS if it doesn't work or there is a permission error, please do `chmod +x flutter_installer_cli` first.
 
 Please report to [issues](https://github.com/daffaalam/flutter_installer_cli/issues) if it fails or something wrong.
 
@@ -66,9 +66,10 @@ If the `version` and `channel` do not find a match, it will retrieve the latest 
 
 ## TODO
 
+- [ ] high - Implementation to the GUI (flutter) version.
+- [ ] low - Documentation of each code and feature.
 - [ ] low - Language improvement (I'm very bad at English).
 - [ ] low - Clean code.
-- [ ] high - Implementation to the GUI (flutter) version.
 
 ## Contributing (Only for Developers)
 
@@ -84,7 +85,7 @@ When contributing to this repository, please first discuss the change you wish t
 1. Clone or download this [repository](https://github.com/daffaalam/flutter_installer_cli).
 2. Install `Dart` from https://dart.dev/get-dart.
 3. Run on project: `dart2native bin/flutter_installer_cli.dart`.
-4. Tip: If you don't have MacOS, you can use [CI/CD Codemagic](https://codemagic.io/).
+4. Tip: If you don't have MacOS, you can use CI/CD [Codemagic](https://codemagic.io/) or [Gitlab](https://docs.gitlab.com/ee/ci/README.html).
 
 ## Other
 

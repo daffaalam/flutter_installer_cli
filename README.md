@@ -1,21 +1,21 @@
 # Flutter Installer
 
-[English](README-en.md) | Indonesia
-
 [![GitHub issues](https://img.shields.io/github/issues/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/issues)
 [![GitHub forks](https://img.shields.io/github/forks/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/network)
 [![GitHub stars](https://img.shields.io/github/stars/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/stargazers)
 [![GitHub license](https://img.shields.io/github/license/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/blob/master/LICENSE)
 
+[English](README-en.md) | Indonesia
+
 Toolkit instalasi untuk Flutter SDK, termasuk Android SDK dan Java SDK jika belum diinstal (deteksi otomatis).
 
 ## Cara Menjalankannya
 
-**Unduh [di sini](https://github.com/daffaalam/flutter_installer_cli/releases/latest), ekstrak dan jalankan segera.**
+**Unduh [DI SINI](https://github.com/daffaalam/flutter_installer_cli/releases/latest), ekstrak dan jalankan segera.**
 
-Harap ingat persyaratan sistem ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirement)/[macos](https://flutter.dev/docs/get-started/install/macos#system-requirement)) yang diperlukan sebelum menjalankan aplikasi ini.
+Harap ingat persyaratan sistem ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirement)/[macos](https://flutter.dev/docs/get-started/install/macos#system-requirement)) yang diperlukan sebelum menjalankan aplikasi ini. Pada Linux dan MacOS jika tidak dapat dijalankan atau terjadi kesalahan terkait perizinan silakan lakukan `chmod +x flutter_installer_cli` terlebih dahulu.
 
-Tolong laporkan ke [issues](https://github.com/daffaalam/flutter_installer_cli/issues) jika gagal atau ada yang salah.
+Tolong laporkan ke [issues](https://github.com/daffaalam/flutter_installer_cli/issues) jika gagal atau ada yang salah. Jika tidak bisa menggunakan github issues boleh kontak langsung ke Telegram [@daffaalam](https://t.me/daffaalam).
 
 ### Jalur Instalasi Kustom
 
@@ -58,17 +58,18 @@ Jika `version` dan `channel` tidak menemukan kecocokan, itu akan mengambil versi
 - [x] Dukungan Windows, Linux, dan MacOS.
 - [x] Mendeteksi apakah Android Studio dan atau Visual Studio Code sudah diinstal.
 - [x] Mendeteksi apakah Android SDK, Java SDK dan Flutter SDK sudah diinstal.
-- [x] Periksa versi terbaru Android SDK, Java SDK, dan Flutter SDK.
-- [x] Menginstall Android SDK, Java SDK, dan Flutter SDK.
+- [x] Memeriksa versi terbaru Android SDK, Java SDK, dan Flutter SDK.
+- [x] Menginstal Android SDK, Java SDK, dan Flutter SDK.
 - [x] Menginstal plugin Flutter dan Dart untuk Visual Studio Code dan Android Studio.
 - [x] Memilih versi Flutter sebelumnya.
 - [x] Memilih jalur instalasi khusus.
 
 ## TODO
 
-- [ ] low - Improvisasi bahasa.
-- [ ] low - Clean code.
-- [ ] high - Implementasi ke versi GUI (flutter).
+- [ ] tinggi - Implementasi ke versi GUI (flutter).
+- [ ] rendah - Dokumentasi tiap code dan fitur.
+- [ ] rendah - Improvisasi bahasa.
+- [ ] rendah - Clean code.
 
 ## Berkontribusi (Hanya Untuk Pengembang)
 
@@ -84,7 +85,7 @@ Ketika ingin berkontribusi pada repositori ini, silakan bahas terlebih dahulu pe
 1. Clone atau unduh [repositori](https://github.com/daffaalam/flutter_installer_cli) ini.
 2. Instal `Dart` dari https://dart.dev/get-dart.
 3. Jalankan dalam proyek: `dart2native bin/flutter_installer_cli.dart`.
-4. Tips: Jika Anda tidak memiliki MacOS, Anda bisa gunakan [CI/CD Codemagic](https://codemagic.io/).
+4. Tips: Jika Anda tidak memiliki MacOS, Anda bisa gunakan CI/CD [Codemagic](https://codemagic.io/) atau [Gitlab](https://docs.gitlab.com/ee/ci/README.html).
 
 ## Lainnya
 
