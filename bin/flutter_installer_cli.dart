@@ -21,6 +21,7 @@ void main(List<String> args) async {
       );
       var powerShell = await checkPowerShell();
       if (!powerShell) {
+        open('https://www.microsoft.com/en-us/download/details.aspx?id=54616');
         stdout.writeln(
           'Can not find PowerShell 5.0 or newer. Please install first to continue.\n'
           'https://www.microsoft.com/en-us/download/details.aspx?id=54616',
@@ -42,9 +43,10 @@ void main(List<String> args) async {
           newPath: '$path/cache/dart-sdk/bin',
         );
       }
-      await run('flutter', ['upgrade'], verbose: true);
+      await run('flutter', ['upgrade'], runInShell: true, verbose: true);
     }
     showText(' FINISH ');
+    open('https://daffaalam.com');
     stdout.write('\n');
     stdout.writeln(
       'please report to $githubRepos if it fails or something wrong',
@@ -52,6 +54,7 @@ void main(List<String> args) async {
     stdin.readLineSync();
     exit(0);
   } catch (e, s) {
+    open('https://daffaalam.com');
     await errorLog(e, s);
     stdin.readLineSync();
     exit(2);

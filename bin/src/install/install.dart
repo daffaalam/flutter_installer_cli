@@ -5,6 +5,7 @@ import 'package:process_run/shell.dart';
 import 'package:process_run/which.dart';
 
 import '../internal/config.dart';
+import '../internal/tool.dart';
 import 'install_android.dart';
 import 'install_flutter.dart';
 import 'install_ide.dart';
@@ -52,6 +53,7 @@ Future<void> installFullPackage() async {
   if (vscodePath != null) await vscodeInstallExtensions();
   var gitPath = await which('git');
   if (gitPath == null) {
+    open('https://git-scm.com/downloads');
     await stdout.writeln(
       '[GIT]${!Platform.isWindows ? ' (REQUIRED) ' : ' '}You might need git for versioning, install from https://git-scm.com/downloads.',
     );
@@ -59,6 +61,7 @@ Future<void> installFullPackage() async {
   stdout.write(
     '\nPlease exit this window and open new Terminal or Command Prompt and run `flutter doctor -v`.\n',
   );
+  open(installationPath);
 }
 
 Future<void> installWithOutAndroidStudio({

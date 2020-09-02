@@ -99,9 +99,12 @@ void showText(String text) {
 
 Future<void> logNewRun() async {
   environment.addAll(Platform.environment);
+  open('https://flutter.dev/docs/get-started/install/'
+      '${Platform.operatingSystem}#system-requirements');
   var cont = await promptConfirm(
     '\nBefore continuing this, double-check the tools needed to run the Flutter.\n'
-    'https://flutter.dev/docs/get-started/install/${Platform.operatingSystem}#system-requirements',
+    'https://flutter.dev/docs/get-started/install/'
+    '${Platform.operatingSystem}#system-requirements',
   );
   if (!cont) exit(0);
   await logCat(
@@ -128,23 +131,19 @@ Future<void> logNewRun() async {
   } catch (e) {}
 }
 
-Future<Null> logCat(String message) async {
+Future<File> logCat(String message) async {
   var tempLog = fixPathPlatform(runDir + '/flutter_installer.log', File);
-  await File(tempLog).writeAsString(
+  var file = await File(tempLog).writeAsString(
     '${DateTime.now()}\t$message\n',
     mode: FileMode.writeOnlyAppend,
   );
+  return file;
 }
 
 Future<Null> errorLog(dynamic e, StackTrace s) async {
-  var tempLog = fixPathPlatform(runDir + '/flutter_installer_error.log', File);
-  var logFile = File(tempLog);
   var exception = exceptionLog(e);
   s ??= StackTrace.current;
-  await logFile.writeAsString(
-    '${DateTime.now()}\n$e\n$s\n',
-    mode: FileMode.writeOnlyAppend,
-  );
+  var logFile = await logCat('[ERROR]\n$e\n$s');
   stderr.writeln(
     '\n'
     'Sorry. Failed to install.\n$exception\n'

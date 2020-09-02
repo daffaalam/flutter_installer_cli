@@ -13,7 +13,7 @@ String flutterChannel;
 String flutterVersion;
 Map<String, String> environment = <String, String>{};
 
-final Version version = Version.parse('0.4.0');
+final Version version = Version.parse('0.4.1');
 final String githubRepos = 'https://github.com/daffaalam/flutter_installer_cli';
 final SentryClient sentryClient = SentryClient(dsn: DSN);
 final String runDir = File(Platform.script.toFilePath()).parent.path;

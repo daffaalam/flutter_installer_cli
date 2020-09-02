@@ -15,7 +15,7 @@ Toolkit instalasi untuk Flutter SDK, termasuk Android SDK dan Java SDK jika belu
 
 Harap ingat persyaratan sistem ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirement)/[macos](https://flutter.dev/docs/get-started/install/macos#system-requirement)) yang diperlukan sebelum menjalankan aplikasi ini. Pada Linux dan MacOS jika tidak dapat dijalankan atau terjadi kesalahan terkait perizinan silakan lakukan `chmod +x flutter_installer_cli` terlebih dahulu.
 
-Tolong laporkan ke [issues](https://github.com/daffaalam/flutter_installer_cli/issues) jika gagal atau ada yang salah. Jika tidak bisa menggunakan github issues boleh kontak langsung ke Telegram [@daffaalam](https://t.me/daffaalam).
+Tolong laporkan ke [issues](https://github.com/daffaalam/flutter_installer_cli/issues) jika gagal atau ada yang salah. Jika tidak bisa menggunakan github issues, kontak langsung ke Telegram [@daffaalam](https://t.me/daffaalam).
 
 ### Jalur Instalasi Kustom
 

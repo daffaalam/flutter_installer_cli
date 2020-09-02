@@ -7,7 +7,7 @@
 
 English | [Indonesia](README.md)
 
-Installation toolkit for Flutter SDK, including Android SDK and Java SDK if not installed (automatic detection). If you cannot use github issues, you can contact directly to Telegram [@daffaalam](https://t.me/daffaalam).
+Installation toolkit for Flutter SDK, including Android SDK and Java SDK if not installed (automatic detection).
 
 ## How to run
 
@@ -15,7 +15,7 @@ Installation toolkit for Flutter SDK, including Android SDK and Java SDK if not 
 
 Please remember the system requirements ([windows](https://flutter.dev/docs/get-started/install/windows#system-requirements)/[linux](https://flutter.dev/docs/get-started/install/linux#system-requirement)/[macos](https://flutter.dev/docs/get-started/install/macos#system-requirement)) needed before running this application. On Linux and MacOS if it doesn't work or there is a permission error, please do `chmod +x flutter_installer_cli` first.
 
-Please report to [issues](https://github.com/daffaalam/flutter_installer_cli/issues) if it fails or something wrong.
+Please report to [issues](https://github.com/daffaalam/flutter_installer_cli/issues) if it fails or something wrong. If you cannot use github issues, contact directly to Telegram [@daffaalam](https://t.me/daffaalam).
 
 ### Custom Installation Path
 
