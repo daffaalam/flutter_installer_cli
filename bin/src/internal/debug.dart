@@ -99,7 +99,7 @@ void showText(String text) {
 
 Future<void> logNewRun() async {
   environment.addAll(Platform.environment);
-  open('https://flutter.dev/docs/get-started/install/'
+  await open('https://flutter.dev/docs/get-started/install/'
       '${Platform.operatingSystem}#system-requirements');
   var cont = await promptConfirm(
     '\nBefore continuing this, double-check the tools needed to run the Flutter.\n'

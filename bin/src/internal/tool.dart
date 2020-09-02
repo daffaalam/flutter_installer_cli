@@ -37,7 +37,7 @@ Future<void> checkLatestVersion() async {
     var tagName = LatestRelease.fromMap(response.data).tagName;
     var cloudVer = Version.parse(tagName.replaceAll(RegExp('[^0-9.]'), ''));
     if (cloudVer > version) {
-      open('$githubRepos/releases/latest');
+      await open('$githubRepos/releases/latest');
       stdout.writeln(
         '\nThe latest version found, please use the latest version for a better experience.\n'
         'Download it at $githubRepos/releases/latest.',
