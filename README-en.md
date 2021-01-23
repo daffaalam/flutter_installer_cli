@@ -5,7 +5,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/stargazers)
 [![GitHub license](https://img.shields.io/github/license/daffaalam/flutter_installer_cli)](https://github.com/daffaalam/flutter_installer_cli/blob/master/LICENSE)
 
-English | [Indonesia](README.md)
+English | [Indonesia](README-id.md)
 
 Installation toolkit for Flutter SDK, including Android SDK and Java SDK if not installed (automatic detection).
 
